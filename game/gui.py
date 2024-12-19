@@ -35,8 +35,9 @@ def gui():
 
         updateBoard(window, board)
 
+        #  This code block controls how fast the snake moves
         currentTime = time.time()
-        if currentTime - game.lastMovement >= 0.3:
+        if currentTime - game.lastMovement >= 0.175:
             game.moveSnake()
 
     window.close()
@@ -48,5 +49,7 @@ def updateBoard(window, board):
         for c in range(20):
             if board[r][c] == 1:
                 window[(r, c)].update(background_color='green')
-            if board[r][c] == 0:
+            elif board[r][c] == 2:
+                window[(r, c)].update(background_color='red')
+            else:
                 window[(r, c)].update(background_color='black')
