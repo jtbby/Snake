@@ -1,5 +1,6 @@
 # Ignore virtual environment
 game/venv/
+venv/
 
 # Ignore Python bytecode files
 game/__pycache__/
