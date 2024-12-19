@@ -35,7 +35,7 @@ def gui():
 
         updateBoard(window, board)
 
-        #  This code block controls how fast the snake moves
+        #  To control the game timing
         currentTime = time.time()
         if currentTime - game.lastMovement >= 0.175:
             game.moveSnake()
