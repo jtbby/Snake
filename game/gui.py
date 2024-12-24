@@ -13,11 +13,11 @@ def gui():
     sg.popup("Welcome to the snake game press 'ok' to start")
     sg.theme('Dark Grey 4')
 
-    layout = []
+    layout = [[sg.Text("Score: ", font = ("Calibri", 20))]]
     for r in range(20):
         row = []
         for c in range(20):
-            row.append(sg.Graph(BOX_SIZE, (0, 0), (0, 0), background_color='black', key=(r, c), pad=(1, 1)))
+            row.append(sg.Graph(BOX_SIZE, (0, -40), (35, -5), background_color='black', key=(r, c), pad=(1, 1)))
         layout.append(row)
 
     game = gameBoard()
@@ -34,6 +34,7 @@ def gui():
             break
 
         updateBoard(window, board)
+        layout[0][0].update(value="Score: " + str(game.score))
 
         #  To control the game timing
         currentTime = time.time()
@@ -53,3 +54,4 @@ def updateBoard(window, board):
                 window[(r, c)].update(background_color='red')
             else:
                 window[(r, c)].update(background_color='black')
+

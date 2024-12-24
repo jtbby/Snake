@@ -29,6 +29,7 @@ class gameBoard:
         self.snakeTail = self.snakeHead
         self.lastMovement = time.time()
         self.placeApple()
+        self.score = 0
 
     # Automatically move snake if no key pressed within .5s
     # Move otherwise
@@ -81,6 +82,7 @@ class gameBoard:
 
     def checkEating(self, x, y):
         if self.board[x][y] == 2:
+            self.score += 1
             self.placeApple()
             return True
         return False
