@@ -13,35 +13,45 @@ def gui():
     sg.popup("Welcome to the snake game press 'ok' to start")
     sg.theme('Dark Grey 4')
 
-    layout = [[sg.Text("Score: ", font = ("Calibri", 20))]]
-    for r in range(20):
-        row = []
-        for c in range(20):
-            row.append(sg.Graph(BOX_SIZE, (0, -40), (35, -5), background_color='black', key=(r, c), pad=(1, 1)))
-        layout.append(row)
-
-    game = gameBoard()
-    listen(game)
-    board = game.board
-
-    window = sg.Window('Snake game', layout)
-
     while True:
+        layout = [[sg.Text("Score: ", font=("Calibri", 20))]]
+        for r in range(20):
+            row = []
+            for c in range(20):
+                row.append(sg.Graph(BOX_SIZE, (0, -40), (35, -5), background_color='black', key=(r, c), pad=(1, 1)))
+            layout.append(row)
 
-        event, values = window.read(timeout=1)
+        game = gameBoard()
+        listen(game)
+        board = game.board
 
-        if event == sg.WIN_CLOSED:  # if user closes window or clicks cancel
-            break
+        window = sg.Window('Snake game', layout)
 
-        updateBoard(window, board)
-        layout[0][0].update(value="Score: " + str(game.score))
+        while True:
 
-        #  To control the game timing
-        currentTime = time.time()
-        if currentTime - game.lastMovement >= 0.175:
-            game.moveSnake()
+            event, values = window.read(timeout=1)
 
-    window.close()
+            if event == sg.WIN_CLOSED:  # if user closes window or clicks cancel
+                break
+
+            updateBoard(window, board)
+            layout[0][0].update(value="Score: " + str(game.score))
+
+            #  To control the game timing
+            currentTime = time.time()
+            if currentTime - game.lastMovement >= 0.175:
+                gameOver = game.moveSnake()
+
+                if gameOver:
+                    window.close()
+                    retry = sg.popup_yes_no(f"Game Over! Your score is {game.score}. Do you want to retry?",
+                                            title="Game Over")
+                    if retry == "Yes":
+                        break
+                    else:
+                        return
+
+        window.close()
 
 
 #  function to redraw the board asap
@@ -54,4 +64,3 @@ def updateBoard(window, board):
                 window[(r, c)].update(background_color='red')
             else:
                 window[(r, c)].update(background_color='black')
-

@@ -37,39 +37,54 @@ class gameBoard:
         x, y = self.snakeHead.x, self.snakeHead.y
         ate = False
         if self.direction == 'r':
-            ate = self.checkEating(x, y + 1)
             newX, newY = x, y + 1
 
         elif self.direction == 'l':
-            ate = self.checkEating(x, y - 1)
             newX, newY = x, y - 1
 
         elif self.direction == 'u':
-            ate = self.checkEating(x - 1, y)
             newX, newY = x - 1, y
 
         elif self.direction == 'd':
-            ate = self.checkEating(x + 1, y)
             newX, newY = x + 1, y
+
+        if self.checkFail(newX, newY):
+            return True
+
+        ate = self.checkEating(newX, newY)
 
         self.board[newX][newY] = 1
         self.snakeHead.next = Node(newX, newY)
         self.snakeHead = self.snakeHead.next
 
-        if not ate: # move the snake
+        if not ate:  # move the snake
             self.moveSnakeBody()
 
         self.lastMovement = time.time()
 
+        return False  # Not a gameOver
+
     def directionChange(self, key):
         if key == Key.right:
-            self.direction = 'r'
+            if self.direction == 'l':
+                return
+            else:
+                self.direction = 'r'
         elif key == Key.left:
-            self.direction = 'l'
+            if self.direction == 'r':
+                return
+            else:
+                self.direction = 'l'
         elif key == Key.up:
-            self.direction = 'u'
+            if self.direction == 'd':
+                return
+            else:
+                self.direction = 'u'
         elif key == Key.down:
-            self.direction = 'd'
+            if self.direction == 'u':
+                return
+            else:
+                self.direction = 'd'
 
     def placeApple(self):
 
@@ -93,6 +108,12 @@ class gameBoard:
         self.snakeTail = self.snakeTail.next
         old.next = None
         curr = self.snakeTail
+
+    def checkFail(self, x, y):
+
+        if x < 0 or x > 19 or y < 0 or y > 19 or self.board[x][y] == 1:
+            return True
+        return False
 
 
 def listen(game):
